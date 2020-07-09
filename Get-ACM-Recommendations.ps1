@@ -5,7 +5,7 @@
   Using Azure Resource Graph queries to gather recommendations from Azure Cost Management and information on the Virtual Machine and Network Interface.
   Then using indices to combine the data and create the report.
 
-  The ACM thresholds (CPU, Memory, Network) are 7 day n95 averages. ACM uses these averages to make it's recommendations.
+  The ACM thresholds (CPU, Memory, Network) are 7 day p95 averages. ACM uses these averages to make it's recommendations.
 .INPUTS
   Update the Azure SubscriptionID to run on the correct subscription. 
 .OUTPUTS
