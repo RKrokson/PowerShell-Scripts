@@ -28,7 +28,7 @@ Param(
 )
 #Variables to set file name and file save location.
 $DesktopPath = [Environment]::GetFolderPath("Desktop")
-$FileCreationDate = Get-Date -Format "yyyy-MM-dd-HH-mm"
+$FileCreationDate = Get-Date -Format "yyyy-MM-dd-HH-mm-ss"
 $FileName = "AzCM_Recs_" + $FileCreationDate + ".csv"
 $reportSaveLocation = Join-Path -Path $DesktopPath -ChildPath $FileName
 
