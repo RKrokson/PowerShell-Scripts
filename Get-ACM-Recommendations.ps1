@@ -62,7 +62,7 @@ foreach ($subscription in $subscriptions) {
 
     foreach ($rec in $recs) {
         Write-Host -ForegroundColor Green "Pulling recommendation for virtual machine" $($rec.Name) "within" $($subscriptionName) "-" $($counterPosition)"/"$($recs.Count)
-        $info = "" | Select-Object recommendation, vmName, subscriptionName, subscriptionID, resourceId, vmSKU, recommendedSKU, vmLocation, marketTag, applicationID, cpuPercent, memoryPercent, networkPercent, accelNetEnabled
+        $info = "" | Select-Object recommendation, vmName, subscriptionName, subscriptionID, resourceId, vmSKU, recommendedSKU, vmLocation, marketTag, applicationID, MaxCpuP95, MaxMemoryP95, MaxTotalNetworkP95, accelNetEnabled
         
         # Array of VM IDs
         $vmIDs = $vms.resourceID
@@ -88,15 +88,15 @@ foreach ($subscription in $subscriptions) {
         $info.recommendedSKU = $rec.recommendedSKU
         $info.subscriptionName = $subscriptionName
         $info.subscriptionID = $subId
-        $info.cpuPercent = $rec.CpuPercent
-        $info.memoryPercent = $rec.memoryPercent
-        $info.networkPercent = $rec.networkPercent
+        $info.MaxCpuP95 = $rec.CpuPercent
+        $info.MaxMemoryP95 = $rec.memoryPercent
+        $info.MaxTotalNetworkP95 = $rec.networkPercent
         $info.accelNetEnabled = $vmNic.accelNet
         $report+=$info
         $counterPosition++
 
     }
 }
-$report | Format-Table recommendation, vmName, subscriptionName, subscriptionID, resourceId, vmSKU, recommendedSKU, vmLocation, marketTag, applicationID, cpuPercent, memoryPercent, networkPercent, accelNetEnabled
+$report | Format-Table recommendation, vmName, subscriptionName, subscriptionID, resourceId, vmSKU, recommendedSKU, vmLocation, marketTag, applicationID, MaxCpuP95, MaxMemoryP95, MaxTotalNetworkP95, accelNetEnabled
 $report | Export-Csv -Path $reportSaveLocation -NoTypeInformation
 
