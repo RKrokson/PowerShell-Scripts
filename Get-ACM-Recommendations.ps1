@@ -46,7 +46,7 @@ foreach ($subscription in $subscriptions) {
     $subId = $subscription.Subscription.Id
 
     # Get all Azure Cost Management Recommendations for the subscription with Azure Resource Graph (ARG has a limit of 5000. Anything over 5000 will be truncated.)
-    $recquery = "advisorresources | where subscriptionId == ""$($subId)"" | where properties.category == 'Cost' | where properties.recommendationTypeId =='e10b1381-5f0a-47ff-8c7b-37bd13d7c974' | extend components = extractall(@""^/subscriptions/(.*)/resourceGroups/(.*)/providers/([a-zA-Z0-9]+\.[a-zA-Z0-9]+/[a-zA-Z0-9]+)/(.*)"", ['id'])[0] |project id, Recommendation=properties.shortDescription.problem, subscriptionId, ResourceGroup=resourceGroup, name=properties.extendedProperties.roleName, CurrentSku=properties.extendedProperties.currentSku, RecommendedSku=properties.extendedProperties.targetSku, CpuPercent=properties.extendedProperties.underutilizedCpuThreshold, MemoryPercent=properties.extendedProperties.underutilizedMemoryThreshold, NetworkPercent=properties.extendedProperties.underutilizedNetworkThreshold, vmResourceId=properties.resourceMetadata.resourceId, properties"
+    $recquery = "advisorresources | where subscriptionId == ""$($subId)"" | where properties.category == 'Cost' | where properties.recommendationTypeId =='e10b1381-5f0a-47ff-8c7b-37bd13d7c974' | extend components = extractall(@""^/subscriptions/(.*)/resourceGroups/(.*)/providers/([a-zA-Z0-9]+\.[a-zA-Z0-9]+/[a-zA-Z0-9]+)/(.*)"", ['id'])[0] |project id, Recommendation=properties.shortDescription.problem, subscriptionId, ResourceGroup=resourceGroup, name=properties.extendedProperties.roleName, CurrentSku=properties.extendedProperties.currentSku, RecommendedSku=properties.extendedProperties.targetSku, MaxCpuP95=properties.extendedProperties.MaxCpuP95, MaxMemoryP95=properties.extendedProperties.MaxMemoryP95, MaxTotalNetworkP95=properties.extendedProperties.MaxTotalNetworkP95, vmResourceId=properties.resourceMetadata.resourceId, properties"
     $recs = Search-azgraph -Query $recquery -First 5000
     
     # Get all VMs with Azure Resource Graph (ARG has a limit of 5000. Anything over 5000 will be truncated.)
@@ -88,9 +88,9 @@ foreach ($subscription in $subscriptions) {
         $info.recommendedSKU = $rec.recommendedSKU
         $info.subscriptionName = $subscriptionName
         $info.subscriptionID = $subId
-        $info.MaxCpuP95 = $rec.CpuPercent
-        $info.MaxMemoryP95 = $rec.memoryPercent
-        $info.MaxTotalNetworkP95 = $rec.networkPercent
+        $info.MaxCpuP95 = $rec.MaxCpuP95
+        $info.MaxMemoryP95 = $rec.MaxMemoryP95
+        $info.MaxTotalNetworkP95 = $rec.MaxTotalNetworkP95
         $info.accelNetEnabled = $vmNic.accelNet
         $report+=$info
         $counterPosition++
